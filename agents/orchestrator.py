@@ -19,7 +19,9 @@ async def run_inspector(ctx):
     resp = await client.messages.create(model=MODEL, max_tokens=800,
         system='Return ONLY raw JSON: {"detected_type":"...","issues":[...],"field_map":{...},"cleaning_plan":[...]}',
         messages=[{"role":"user","content":prompt}])
-    ctx.inspection = _parse_json(resp.content[0].text, default={})
+    raw_text = resp.content[0].text
+    parsed = _parse_json(raw_text, default=None)
+    ctx.inspection = parsed if parsed is not None else {"_debug_raw": raw_text}
 
 async def run_cleaner(ctx):
     prompt = (f"Raw data:\n{json.dumps(ctx.raw_data, default=str)}\n\n"
