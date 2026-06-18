@@ -63,7 +63,7 @@ class X402Middleware(BaseHTTPMiddleware):
         if payload.get("x402Version") != 1:
             return False, "Unsupported x402Version"
         try:
-            async with httpx.AsyncClient(timeout=10.0) as client:
+            async with httpx.AsyncClient(timeout=10.0, follow_redirects=True) as client:
                 resp = await client.post(
                     f"{self.facilitator_url}/verify",
                     json={

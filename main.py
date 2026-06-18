@@ -22,7 +22,7 @@ app.add_middleware(X402Middleware,
     amount_usdc=os.getenv("PRICE_USDC","0.001"),
     network=os.getenv("NETWORK","base-sepolia"),
     protected_paths=["/format","/batch"],
-    facilitator_url=os.getenv("X402_FACILITATOR","https://x402.org/facilitator"),
+    facilitator_url=os.getenv("X402_FACILITATOR", "https://www.x402.org/facilitator"),
 )
 
 class FormatRequest(BaseModel):
