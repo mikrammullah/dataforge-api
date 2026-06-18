@@ -49,7 +49,10 @@ class X402Middleware(BaseHTTPMiddleware):
                 "payTo": self.pay_to,
                 "maxTimeoutSeconds": 300,
                 "asset": self.asset,
-                "extra": {"name": "DataForge API", "version": "1.0.0"},
+                "extra": {
+                  "name": "USDC",
+                  "version": "2",
+                },
             }]
         }
         return JSONResponse(status_code=402, content=body)
@@ -69,15 +72,19 @@ class X402Middleware(BaseHTTPMiddleware):
                     json={
                         "x402Version": 1,
                         "paymentPayload": payload,
-                        "paymentRequirements": {
-                            "scheme": "exact",
-                            "network": self.network,
-                            "maxAmountRequired": self.amount_atomic,
-                            "resource": resource_url,
-                            "payTo": self.pay_to,
+                       "paymentRequirements": {
+                             "scheme": "exact",
+                             "network": self.network,
+                             "maxAmountRequired": self.amount_atomic,
+                              "resource": resource_url,
+                                "payTo": self.pay_to,
                             "asset": self.asset,
                             "maxTimeoutSeconds": 300,
-                        },
+                            "extra": {
+                                "name": "USDC",
+                                "version": "2",
+                                },
+                            },
                     },
                 )
             data = resp.json()
