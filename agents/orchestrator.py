@@ -3,7 +3,7 @@ from typing import Any, Optional
 from dataclasses import dataclass, field
 
 client = anthropic.AsyncAnthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
-MODEL = "claude-sonnet-4-20250514"
+MODEL = "claude-sonnet-4-6"
 
 @dataclass
 class PipelineContext:
