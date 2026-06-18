@@ -16,13 +16,17 @@ class PipelineContext:
 
 async def run_inspector(ctx):
     prompt = f"Analyze this data:\n{json.dumps(ctx.raw_data, default=str)}"
-    resp = await client.messages.create(model=MODEL, max_tokens=800,
-        system='Return ONLY raw JSON: {"detected_type":"...","issues":[...],"field_map":{...},"cleaning_plan":[...]}',
+    resp = await client.messages.create(model=MODEL, max_tokens=2000,
+        system=(
+            'Return ONLY raw JSON: {"detected_type":"...","issues":["short string per issue"],'
+            '"field_map":{"field":"canonical_name"},"cleaning_plan":["short string per step"]}. '
+            'Keep issues and cleaning_plan as SHORT STRINGS, not nested objects. Be concise — '
+            'no before/after examples, no extra metadata. No markdown fences.'
+        ),
         messages=[{"role":"user","content":prompt}])
     raw_text = resp.content[0].text
     parsed = _parse_json(raw_text, default=None)
     ctx.inspection = parsed if parsed is not None else {"_debug_raw": raw_text}
-
 async def run_cleaner(ctx):
     prompt = (f"Raw data:\n{json.dumps(ctx.raw_data, default=str)}\n\n"
               f"Cleaning plan:\n{json.dumps(ctx.inspection.get('cleaning_plan',[]))}\n\n"
