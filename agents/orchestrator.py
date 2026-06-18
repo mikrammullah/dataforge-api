@@ -52,5 +52,13 @@ def _parse_json(text, default=None):
     cleaned = re.sub(r"```(?:json)?\s*|\s*```", "", text).strip()
     try:
         return json.loads(cleaned)
-    except:
-        return default
+    except json.JSONDecodeError:
+        pass
+    # Fallback: extract the first balanced {...} or [...] block
+    match = re.search(r"(\{.*\}|\[.*\])", cleaned, re.DOTALL)
+    if match:
+        try:
+            return json.loads(match.group(1))
+        except json.JSONDecodeError:
+            pass
+    return default
