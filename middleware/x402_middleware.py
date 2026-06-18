@@ -87,4 +87,5 @@ class X402Middleware(BaseHTTPMiddleware):
         except httpx.TimeoutException:
             return False, "Facilitator timeout"
         except Exception as exc:
-            return False, "Verification unavailable"
+            logger.error("Facilitator error: %s", exc)
+            return False, f"Payment verification unavailable: {exc}"
